@@ -18,64 +18,94 @@ describe("/api", () => {
   })
   after(() => connection.destroy());
 
-  it('status: 404 invalid paths', () => {
-    return request(app)
-      .get('/api/invalidpath')
-      .expect(404)
-      .then((response) => {
-      expect(response.body.msg).to.equal('path not found')
-    })
+  describe('invalid paths', () => {
+    it('status: 404 invalid paths', () => {
+      return request(app)
+        .get('/api/invalidpath')
+        .expect(404)
+        .then((response) => {
+          expect(response.body.msg).to.equal('path not found')
+        })
+    });
   });
 
   describe("/topics", () => {
-    it('status: 405, responds with error message when method not allowed', () => {
-      const notAllowed = ["patch", "put", "delete"]
-      const promiseArr = notAllowed.map(method => {
-        return request(app)[method]('/api/topics')
-          .expect(405)
-          .then(({ body: { msg } })=> {
-            expect(msg).to.equal('method not allowed')
-          })
-      })
-      return Promise.all(promiseArr)
-    })
-  });
     describe("GET", () => {
       it("status: 200, responds with an array of topic objects each having correct properties", () => {
         return request(app)
-          .get("/api/topics")
-          .expect(200)
-          .then(({ body:{topics} })=> {
-            topics.forEach(topic => {
-              expect(topic).to.have.keys('slug', 'description')
-            })
+        .get("/api/topics")
+        .expect(200)
+        .then(({ body: { topics } }) => {
+          topics.forEach(topic => {
+            expect(topic).to.have.keys('slug', 'description')
+          })
           
+        });
       });
     });
+    describe('INVALID METHODS', () => {
+      it('status: 405, responds with error message when method not allowed', () => {
+        const notAllowed = ["patch", "put", "delete"]
+        const promiseArr = notAllowed.map(method => {
+          return request(app)[method]('/api/topics')
+            .expect(405)
+            .then(({ body: { msg } }) => {
+              expect(msg).to.equal('method not allowed')
+            })
+        })
+        return Promise.all(promiseArr)
+      })
+    });
   });
-  describe('/users', () => {
+  describe('/users:username', () => {
     describe('GET', () => {
       it('status: 200, responds with requested user object having all the correct keys', () => {
         return request(app)
-          .get('/api/users/lurker')
-          .expect(200)
-          .then(({ body: { user } }) => {
-            expect(user).to.eql({
-              username: 'lurker',
-              name: 'do_nothing',
-              avatar_url:
-                'https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png',
-            });
+        .get('/api/users/lurker')
+        .expect(200)
+        .then(({ body: { user } }) => {
+          expect(user).to.eql({
+            username: 'lurker',
+            name: 'do_nothing',
+            avatar_url:
+            'https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png',
           });
+        });
       });
       it('status: 404, responds with error message when username is not valid', () => {
         return request(app)
-          .get('/api/users/notAUsername')
-          .expect(404)
-          .then(({ body: { msg } }) => {
-            expect(msg).to.equal('user not found');
-          });
+        .get('/api/users/notAUsername')
+        .expect(404)
+        .then(({ body: { msg } }) => {
+          expect(msg).to.equal('user not found');
+        });
       });
     })
+    describe('INVALID METHODS', () => {
+      it('status: 405, responds with error message when method not allowed', () => {
+        const notAllowed = ["patch", "put", "delete"]
+        const promiseArr = notAllowed.map(method => {
+          return request(app)[method]('/api/users/lurker')
+            .expect(405)
+            .then(({ body: { msg } }) => {
+              expect(msg).to.equal('method not allowed')
+            });
+        });
+        return Promise.all(promiseArr)
+      });
+    });
+  });
+  describe('/articles/:article_id', () => {
+    describe('GET', () => {
+      it('status: 200, responds with requested user object having all the correct keys', () => {
+        return request(app)
+        .get('/api/users/1')
+        .expect(200)
+        .then(({ body }) => {
+         console.log(body)
+          });
+        
+      });
+    });
   });
 });
