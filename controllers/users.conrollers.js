@@ -1,4 +1,4 @@
-const {selectUser}= require('../models/users.models')
+const { selectUser } = require('../models/users.models');
 
 exports.getUser = (req, res, next) => {
     const username = req.params.username

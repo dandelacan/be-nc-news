@@ -99,12 +99,58 @@ describe("/api", () => {
     describe('GET', () => {
       it('status: 200, responds with requested user object having all the correct keys', () => {
         return request(app)
-        .get('/api/users/1')
-        .expect(200)
-        .then(({ body }) => {
-         console.log(body)
+          .get('/api/articles/1')
+          .expect(200)
+          .then(({ body: { article } }) => {
+            expect(article).to.have.keys('author', 'title', 'article_id', 'body', 'topic', 'created_at', 'votes', 'comment_count');
+            expect(article.comment_count).to.equal('13')
           });
-        
+      });
+      it('status: 404, responds with error message when article id is not valid', () => {
+        return request(app)
+          .get('/api/articles/666')
+          .expect(404)
+          .then(({ body: { msg } }) => {
+            expect(msg).to.equal('invalid article id')
+          });
+      });
+    });
+    describe('PATCH', () => {
+      it('status: 200, increments votes and responds with updates article', () => {
+        return request(app)
+          .patch('/api/articles/1')
+          .send({ inc_votes: 1 })
+          .expect(200)
+          .then(({ body: { article } }) => {
+            expect(article.votes).to.equal(101)
+          });
+      });
+      it('status: 404, responds with error message when article id is not valid', () => {
+        return request(app)
+          .patch('/api/articles/666')
+          .send({ inc_votes: 1 })
+          .expect(404)
+          .then(({ body: { msg } }) => {
+            expect(msg).to.equal('invalid article id')
+          });
+      });
+      it('status: 400, responds with error message when body does not contain inc_votes', () => {
+        return request(app)
+          .patch('/api/articles/1')
+          .send({ votes: 1 })
+          .expect(400)
+          .then(({ body: { msg } }) => {
+            expect(msg).to.equal('missing key/s')
+          });
+      });
+      it('status: 200, increments votes and responds with updates article', () => {
+        return request(app)
+          .patch('/api/articles/1')
+          .send({ inc_votes: 'twenty' })
+          .expect(400)
+          .then(({ body: { msg } }) => {
+            expect(msg).to.equal('sem')
+          });
       });
     });
   });
