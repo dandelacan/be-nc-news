@@ -1,7 +1,9 @@
-const topicsRouter = require('express').Router()
-const {getTopics} = require('../controllers/topics.controller')
+const topicsRouter = require('express').Router();
+const { getTopics } = require('../controllers/topics.controllers');
+const { send405 } = require('../errors');
 
 topicsRouter.route('/')
-.get(getTopics)
-
-module.exports = topicsRouter
+    .get(getTopics)
+    .all(send405);
+    
+module.exports = topicsRouter;
