@@ -1,8 +1,16 @@
-const { selectArticle, updateVotes } = require('../models/articles.models');
+const { selectArticles, selectArticle, updateVotes } = require('../models/articles.models');
 
+exports.getArticles = (req, res, next) => {
+    queries = req.query
+    selectArticles(queries).then(articles => {
+        res.send({articles})
+    }).catch(next)
+}
+    
+    
 exports.getArticle = (req, res, next) => {
     const article_id = req.params.article_id
-    selectArticle(article_id).then(([article]) => {
+    selectArticles({}, article_id).then(([article]) => {
         res.status(200).send({article})
     }).catch(next)
 };
