@@ -1,4 +1,4 @@
-const { selectArticles, selectArticle, updateVotes } = require('../models/articles.models');
+const { selectArticles, updateVotes } = require('../models/articles.models');
 
 exports.getArticles = (req, res, next) => {
     queries = req.query

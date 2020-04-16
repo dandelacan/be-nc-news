@@ -19,3 +19,21 @@ exports.selectComments = (article_id, { sort_by = 'created_at', order = 'desc' }
             return comments
         })
 }
+
+exports.updateVotes = (increment, comment_id) => {
+    if (!increment) return Promise.reject({ status: 400, msg: 'body must contain inc_votes' })
+    return connection('comments')
+        .where(comment_id)
+        .increment('votes', increment)
+        .returning('*')
+        .then(comments => {
+            if (comments.length === 0) return Promise.reject({ status: 404, msg: 'no comments found' })
+            return comments
+        })
+};
+
+exports.deleteComment = (comment_id) => {
+    return connection('comments')
+        .where(comment_id)
+        .del()
+};
