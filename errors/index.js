@@ -3,7 +3,10 @@ exports.send405 = (req, res, next) => {
 };
 exports.handlePSQLErrors = (err, req, res, next) => {
     const codes = {
-        '22P02': { status: 400, msg: 'missing key/s' }
+        '42703': { status: 400, msg: 'invalid key/s' },
+        '23503': { status: 422, msg: 'resource does not exist' },
+        '22P02': { status: 400, msg: 'missing key/s' },
+        '23502': { status: 400, msg: 'body has wrong keys' }
     };
 
     if (err.code in codes) {

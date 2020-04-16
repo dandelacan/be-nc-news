@@ -3,7 +3,11 @@ process.env.NODE_ENV = "test";
 const app = require("../app");
 const request = require("supertest");
 const connection = require("../db/connection");
-const { expect } = require('chai');
+const chai = require('chai')
+const chaiSorted = require('chai-sorted')
+const { expect } = chai;
+
+chai.use(chaiSorted)
 
 describe("/api", () => {
  
@@ -95,6 +99,20 @@ describe("/api", () => {
       });
     });
   });
+  describe.only('/articles', () => {
+    describe('GET', () => {
+      it('status: 200, responds with array of user objects having all the correct keys', () => {
+        return request(app)
+          .get('/api/articles')
+          .expect(200)
+          .then(({ body: { articles } }) => {
+            articles.forEach(article => {
+              expect(article).to.have.keys('author', 'title', 'article_id', 'topic', 'created_at', 'votes', 'comment_count');
+            });
+          });
+      });
+    });
+  });
   describe('/articles/:article_id', () => {
     describe('GET', () => {
       it('status: 200, responds with requested user object having all the correct keys', () => {
@@ -115,7 +133,7 @@ describe("/api", () => {
           });
       });
     });
-    describe('PATCH', () => {
+    describe('PATCH ', () => {
       it('status: 200, increments votes and responds with updates article', () => {
         return request(app)
           .patch('/api/articles/1')
@@ -143,13 +161,113 @@ describe("/api", () => {
             expect(msg).to.equal('missing key/s')
           });
       });
-      it('status: 200, increments votes and responds with updates article', () => {
+      it('status: 400, increments votes and responds with updates article', () => {
         return request(app)
           .patch('/api/articles/1')
           .send({ inc_votes: 'twenty' })
           .expect(400)
           .then(({ body: { msg } }) => {
-            expect(msg).to.equal('sem')
+            expect(msg).to.equal('missing key/s')
+          });
+      });
+    });
+    describe('POST /comments', () => {
+      it('status: 201, accepts username and body and responds with new comment', () => {
+        return request(app)
+          .post('/api/articles/1/comments')
+          .send({ username: 'lurker', body: 'fake news!' })
+          .expect(201)
+          .then(({ body: { comment } }) => {
+            expect(comment).to.have.keys('comment_id', 'author', 'article_id', 'votes', 'created_at', 'body')
+            expect(comment.body).to.equal('fake news!')
+          })
+      });
+      it('status: 422, responds with error message when passed invalid article id', () => {
+        return request(app)
+          .post('/api/articles/666/comments')
+          .send({ username: 'lurker', body: 'fake news!' })
+          .expect(422)
+          .then(({body:{msg}}) => {
+            expect(msg).to.equal('resource does not exist')
+          })
+      })
+      it('status: 400, responds with error message when passed incorrect body keys', () => {
+        return request(app)
+          .post('/api/articles/1/comments')
+          .send({ body: 'fake news!' })
+          .expect(400)
+          .then(({body:{msg}}) => {
+            expect(msg).to.equal('body has wrong keys')
+          })
+      })
+      it('status: 422, responds with error message when username does not exist', () => {
+        return request(app)
+          .post('/api/articles/1/comments')
+          .send({ username: 'dan', body: 'fake news!' })
+          .expect(422)
+          .then(({ body: { msg } }) => {
+            expect(msg).to.equal('resource does not exist')
+          })
+      });
+    });
+    describe('GET /comments', () => {
+      it('status: 200 responds with an array of comments relating to article id having correct keys', () => {
+        return request(app)
+          .get('/api/articles/1/comments')
+          .expect(200)
+          .then(({ body: { comments } }) => {
+            expect(comments.length).to.equal(13)
+            comments.forEach(comment => {
+              expect(comment).to.have.keys('comment_id', 'votes', 'created_at', 'author', 'body');
+            })
+          });
+      });
+      it('status: 200 responds with an array of comments default sorted by created_at desc', () => {
+        return request(app)
+          .get('/api/articles/1/comments')
+          .expect(200)
+          .then(({ body: { comments } }) => {
+            expect(comments).to.be.descendingBy('created_at')
+          });
+      });
+      it('status: 200 accepts sort_by query and order defaults to desc', () => {
+        return request(app)
+          .get('/api/articles/1/comments?sort_by=votes')
+          .expect(200)
+          .then(({ body: { comments } }) => {
+            expect(comments).to.be.descendingBy('votes')
+          });
+      })
+      it('status: 200 accepts order query', () => {
+        return request(app)
+          .get('/api/articles/1/comments?sort_by=votes&order=asc')
+          .expect(200)
+          .then(({ body: { comments } }) => {
+            expect(comments).to.be.ascendingBy('votes')
+          });
+      });
+      it('status: 400 returns error message when sort_by key does not exist', () => {
+        return request(app)
+          .get('/api/articles/1/comments?sort_by=invalidKey')
+          .expect(400)
+          .then(({ body: { msg } }) => {
+            expect(msg).to.equal('invalid key/s')
+          });
+      });
+      it('status: 400 returns error message when order is not asc or desc', () => {
+        return request(app)
+          .get('/api/articles/1/comments?order=invalid')
+          .expect(400)
+          .then(({ body: { msg } }) => {
+            expect(msg).to.equal('order query must be asc or desc')
+          });
+      });
+      it('status: 404 returns error message when articles does not exist', () => {
+        return request(app)
+          .get('/api/articles/666/comments')
+          .expect(404)
+          .then(({ body: { msg } }) => {
+            expect(msg).to.equal('no comments found')
           });
       });
     });
