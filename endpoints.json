@@ -9,8 +9,19 @@
       "topics": [{ "slug": "football", "description": "Footie!" }]
     }
   },
+  "GET /api/users/:username":{
+    "description":"serves user object of specified username parameter",
+    "queries":[],
+    "exampleResponse":{
+      "user": {
+        "username": "cooljmessy",
+        "name": "Peter Messy",
+        "avatar_url": "https://i.imgur.com/WfX0Neu.jpg"
+      
+    }
+  },
   "GET /api/articles": {
-    "description": "serves an array of all topics",
+    "description": "serves an array of all articles",
     "queries": ["author", "topic", "sort_by", "order"],
     "exampleResponse": {
       "articles": [
@@ -23,5 +34,90 @@
         }
       ]
     }
+  },
+  "GET /api/articles/:artice_id": {
+    "description": "serves an article object specified by parameter",
+    "queries": [],
+    "exampleResponse": {
+      "article": 
+        { "article_id": "2",
+          "title": "Seafood substitutions are increasing",
+          "topic": "cooking",
+          "author": "weegembump",
+          "body": "Text from the article..",
+          "created_at": 1527695953341,
+          "votes": "100",
+          "comment_count": "2"
+        }
+      
+    }
+  },
+  "PATCH /api/articles/:artice_id": {
+    "description": "increments votes of article specified by article_id parameter, responds with updated article object",
+    "queries": [],
+    "exampleRequestBody":{"inc_votes": "1"},
+    "exampleResponse": {
+      "article": 
+        { "article_id": "2",
+          "title": "Seafood substitutions are increasing",
+          "topic": "cooking",
+          "author": "weegembump",
+          "body": "Text from the article..",
+          "created_at": 1527695953341,
+          "votes": "100",
+          "comment_count": "2"
+        }
+    }
+  },
+  "POST /api/articles/:artice_id/comments": {
+    "description": "accepts username and body properties in request body, creates new comment and responds with new comment",
+    "queries": [],
+    "exampleRequestBody":{"username": "danh", "body":"Text from the comment.."},
+    "exampleResponse": {
+      "comment": 
+        { "comment_id":"1",
+          "author":"danh",
+          "article_id":"2",
+          "votes":"100",
+          "created_at":1527695953341,
+          "body":"Text from the comment.."
+        }
+    }
+  },
+  "GET /api/articles/:artice_id/comments": {
+    "description": "serves an array of comments associated with article specified by article_id parameter",
+    "queries": ["sort_by", "order"],
+    "exampleResponse": {
+      "comments": 
+        [{ "comment_id":"1",
+          "author":"danh",
+          "article_id":"2",
+          "votes":"100",
+          "created_at":1527695953341,
+          "body":"Text from the comment.."
+        }]
+    }
+  },
+  "PATCH /api/comments/:comment_id": {
+    "description": "increments votes of comment specified by comment_id parameter, responds with updated comment object",
+    "queries": [],
+    "exampleRequestBody":{"inc_votes": "1"},
+    "exampleResponse": {
+      "comment": 
+      { "comment_id":"1",
+        "author":"danh",
+        "article_id":"2",
+        "votes":"100",
+        "created_at":1527695953341,
+        "body":"Text from the comment.."
+      }
+    }
+  },
+  "DELETE /api/comments/:comment_id": {
+    "description": "deletes comment specified by comment_id parameter",
+    "queries": []
   }
 }
+}
+
+

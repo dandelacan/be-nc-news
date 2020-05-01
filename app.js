@@ -7,10 +7,10 @@ const app = express()
 app.use(express.json())
 
 app.use('/api', apiRouter)
+app.all('/*', handleInvalidPaths)
 
 app.use(handlePSQLErrors)
 app.use(handleCustoms)
-app.all('/*', handleInvalidPaths)
 app.use(handle500s)
 
 module.exports = app
