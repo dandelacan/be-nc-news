@@ -1,16 +1,23 @@
-const express = require('express')
-const apiRouter = require('./routes/api.router')
-const{handlePSQLErrors, handleCustoms, handle500s, handleInvalidPaths} = require('./errors/index')
+const express = require("express");
+const apiRouter = require("./routes/api.router");
+const {
+  handlePSQLErrors,
+  handleCustoms,
+  handle500s,
+  handleInvalidPaths,
+} = require("./errors/index");
+const cors = require("cors");
 
-const app = express()
+const app = express();
 
-app.use(express.json())
+app.use(cors());
+app.use(express.json());
 
-app.use('/api', apiRouter)
-app.all('/*', handleInvalidPaths)
+app.use("/api", apiRouter);
+app.all("/*", handleInvalidPaths);
 
-app.use(handlePSQLErrors)
-app.use(handleCustoms)
-app.use(handle500s)
+app.use(handlePSQLErrors);
+app.use(handleCustoms);
+app.use(handle500s);
 
-module.exports = app
+module.exports = app;
