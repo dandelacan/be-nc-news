@@ -125,8 +125,8 @@ GET /api/articles/:artice_id
 * serves an article object specified by parameter
 * example response
 ```json
-{"article": 
-  { "article_id": "2",
+{"article": { 
+  "article_id": "2",
   "title": "Seafood substitutions are increasing",
   "topic": "cooking",
   "author": "weegembump",
@@ -148,18 +148,17 @@ PATCH /api/articles/:artice_id
 ```
 * example response
 ```json
-{
-      "article": 
-        { "article_id": "2",
-          "title": "Seafood substitutions are increasing",
-          "topic": "cooking",
-          "author": "weegembump",
-          "body": "Text from the article..",
-          "created_at": 1527695953341,
-          "votes": "100",
-          "comment_count": "2"
-        }
-    }
+{"article": {
+  "article_id": "2",
+  "title": "Seafood substitutions are increasing",
+  "topic": "cooking",
+  "author": "weegembump",
+  "body": "Text from the article..",
+  "created_at": 1527695953341,
+  "votes": "100",
+  "comment_count": "2"
+  }
+}
 ```
 ---
 ```http
@@ -172,16 +171,15 @@ POST /api/articles/:artice_id/comments
 ```
 * example response
 ```json
-{
-      "comment": 
-        { "comment_id":"1",
-          "author":"danh",
-          "article_id":"2",
-          "votes":"100",
-          "created_at":1527695953341,
-          "body":"Text from the comment.."
-        }
-    }
+{"comment": {
+  "comment_id":"1",
+  "author":"danh",
+  "article_id":"2",
+  "votes":"100",
+  "created_at":1527695953341,
+  "body":"Text from the comment.."
+  }
+}
 ```
 ---
 ```http
@@ -193,16 +191,15 @@ GET /api/articles/:artice_id/comments
   * order [asc or desc]
 * example response
 ```json
- {
-      "comments": 
-        [{ "comment_id":"1",
-          "author":"danh",
-          "article_id":"2",
-          "votes":"100",
-          "created_at":1527695953341,
-          "body":"Text from the comment.."
-        }]
-    }
+ {"comments": 
+  [{ "comment_id":"1",
+    "author":"danh",
+    "article_id":"2",
+    "votes":"100",
+    "created_at":1527695953341,
+    "body":"Text from the comment.."
+  }]
+}
 ```
 ---
 ```http
@@ -215,16 +212,15 @@ PATCH /api/comments/:comment_id
 ```
 * example response
 ```json
-{
-      "comment": 
-      { "comment_id":"1",
-        "author":"danh",
-        "article_id":"2",
-        "votes":"100",
-        "created_at":1527695953341,
-        "body":"Text from the comment.."
-      }
-    }
+{"comment": 
+  { "comment_id":"1",
+    "author":"danh",
+    "article_id":"2",
+    "votes":"100",
+    "created_at":1527695953341,
+    "body":"Text from the comment.."
+  }
+}
 ```
 ---
 ```http
