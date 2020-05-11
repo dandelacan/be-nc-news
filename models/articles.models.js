@@ -5,6 +5,7 @@ exports.selectArticles = ({ sort_by = 'created_at', order = 'desc', author, topi
         return Promise.reject({ status: 400, msg: "order query must be asc or desc" })
     }
     return connection("articles")
+
         .select(
             "articles.author",
             "title",
@@ -18,6 +19,7 @@ exports.selectArticles = ({ sort_by = 'created_at', order = 'desc', author, topi
         .leftJoin("comments", "articles.article_id", "comments.article_id")
         .groupBy("articles.article_id")
         .orderBy(sort_by, order)
+        .count("articles.article_id")
         .modify((query) => {
             if (article_id) {
                 query.where({ "articles.article_id": article_id })
@@ -32,7 +34,11 @@ exports.selectArticles = ({ sort_by = 'created_at', order = 'desc', author, topi
             if (topic) {
                 query.where({ "articles.topic": topic })
             }
-        }).limit(5).offset((page - 1) * 5)
+        }).modify((query) => {
+            if (page) {
+                query.limit(5).offset((page - 1) * 5)
+            }
+        })
         .then((article) => {
             if (article.length === 0) {
                 return Promise.reject({ status: 404, msg: "no articles found" });
