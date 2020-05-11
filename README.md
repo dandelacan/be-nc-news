@@ -5,7 +5,7 @@ Northcoders News API is a restful api for a fictional social news website. The p
 ## Running the project locally
 
 ### Prerequisites
-This project requires  [npm](https://www.npmjs.com/get-npm), [PostgreSQL](https://www.postgresql.org/) , and [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) to run. 
+This project requires [node](https://nodejs.org/) (v13.7 or newer) [npm](https://www.npmjs.com/get-npm), [PostgreSQL](https://www.postgresql.org/) , and [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) to run. 
 
 ### Installation
 1. Fork a copy of the repo onto your machine then, to install the projects dependencies, from the root directory run the command 
