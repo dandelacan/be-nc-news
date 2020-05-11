@@ -1,6 +1,6 @@
 # Northcoders News API
 
-Northcoders News API is a restful api for a fictional social news website. The project can be run loacally using the instructions below and is also [hosted on heroku](https://djh-nc-news.herokuapp.com/api)
+Northcoders News API is a restful api for a fictional social news website. The project can be run locally using the instructions below and is also [hosted on heroku](https://djh-nc-news.herokuapp.com/api)
 
 ## Running the project locally
 
@@ -8,7 +8,7 @@ Northcoders News API is a restful api for a fictional social news website. The p
 This project requires  [npm](https://www.npmjs.com/get-npm), [PostgreSQL](https://www.postgresql.org/) , and [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) to run. 
 
 ### Installation
-1. Fork a copy of the repo onto your machine then, to install the projects dependencies, from the root direrectory run the command 
+1. Fork a copy of the repo onto your machine then, to install the projects dependencies, from the root directory run the command 
 ```bash
 npm install
 ```
@@ -120,7 +120,7 @@ GET /api/articles
 ```
 ---
 ```http
-GET /api/articles/:artice_id
+GET /api/articles/:article_id
 ```
 * serves an article object specified by parameter
 * example response
@@ -139,7 +139,7 @@ GET /api/articles/:artice_id
 ```
 ---
 ```http
-PATCH /api/articles/:artice_id
+PATCH /api/articles/:article_id
 ```
 * increments votes of article specified by article_id parameter, responds with updated article object
 * example request body
@@ -162,7 +162,7 @@ PATCH /api/articles/:artice_id
 ```
 ---
 ```http
-POST /api/articles/:artice_id/comments
+POST /api/articles/:article_id/comments
 ```
 * accepts username and body properties in request body, creates new comment and responds with new comment
 * example request body
@@ -183,7 +183,7 @@ POST /api/articles/:artice_id/comments
 ```
 ---
 ```http
-GET /api/articles/:artice_id/comments
+GET /api/articles/:article_id/comments
 ```
 * serves an array of comments associated with article specified by article_id parameter
 * queries
