@@ -8,11 +8,11 @@ Northcoders News API is a restful api for a fictional social news website. The p
 This project requires  [npm](https://www.npmjs.com/get-npm), [PostgreSQL](https://www.postgresql.org/) , and [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) to run. 
 
 ### Installation
-1. Fork a copy of the repo onto your machine then from the rood rirectory run the command 
+1. Fork a copy of the repo onto your machine then, to install the projects dependencies, from the root direrectory run the command 
 ```bash
 npm install
 ```
-to install the projects dependencies.
+
 
 2. Create a knexfile.js in the root directory which should contain the following:
 ```js
@@ -62,7 +62,7 @@ npm run seed
 ```bash
 npm start
 ```
-the server will now be listingin on port 9900
+the server will now be listening on port 9900
 
 ### Testing
 Run test files using the command

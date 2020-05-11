@@ -1,6 +1,6 @@
 const connection = require("../db/connection");
 
-exports.selectArticles = ({ sort_by = 'created_at', order = 'desc', author, topic }, article_id) => {
+exports.selectArticles = ({ sort_by = 'created_at', order = 'desc', author, topic, page }, article_id) => {
     if (!['asc', 'desc'].includes(order)) {
         return Promise.reject({ status: 400, msg: "order query must be asc or desc" })
     }
@@ -32,7 +32,7 @@ exports.selectArticles = ({ sort_by = 'created_at', order = 'desc', author, topi
             if (topic) {
                 query.where({ "articles.topic": topic })
             }
-        })
+        }).limit(5).offset((page - 1) * 5)
         .then((article) => {
             if (article.length === 0) {
                 return Promise.reject({ status: 404, msg: "no articles found" });
@@ -42,19 +42,19 @@ exports.selectArticles = ({ sort_by = 'created_at', order = 'desc', author, topi
 };
 
 exports.updateVotes = (inc_vote, { article_id }) => {
-  return connection("articles")
-    .select("votes")
-    .where({ article_id })
-    .then((article) => {
-      if (article.length === 0)
-        return Promise.reject({ status: 404, msg: "invalid article id" });
-      return article;
-    })
-    .then(([{ votes }]) => {
-      const newVoteTotal = votes + inc_vote;
-      return connection("articles")
+    return connection("articles")
+        .select("votes")
         .where({ article_id })
-        .update({ votes: newVoteTotal })
-        .returning("*");
-    });
+        .then((article) => {
+            if (article.length === 0)
+                return Promise.reject({ status: 404, msg: "invalid article id" });
+            return article;
+        })
+        .then(([{ votes }]) => {
+            const newVoteTotal = votes + inc_vote;
+            return connection("articles")
+                .where({ article_id })
+                .update({ votes: newVoteTotal })
+                .returning("*");
+        });
 };
